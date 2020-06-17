@@ -1,1 +1,1 @@
-# bxwm - basic x window manager
+# yoga - a flexible x window manager
