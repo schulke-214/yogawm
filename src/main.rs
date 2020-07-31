@@ -1,14 +1,13 @@
 use libx::connect;
-use libx::X11Error;
 
 mod error;
 
 use error::YogaError;
 
 fn main() -> Result<(), YogaError> {
-    let x = connect()?;
+    let (_, screen) = connect()?;
 
-    println!("Hello, world! Screen ID {:#?}", x);
+    println!("Hello, world! Screen ID {}", screen);
 
     Ok(())
 }
