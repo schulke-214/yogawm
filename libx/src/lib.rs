@@ -19,10 +19,10 @@
 pub mod error;
 pub use error::X11Error;
 
-use x11rb::connection::Connection;
+use x11rb::connection::Connection as X11RawConnection;
 
 /// Holds a Connection to a X11 Server.
-pub type X11Connection = impl Connection + Send + Sync;
+pub type X11Connection = impl X11RawConnection + Send + Sync;
 
 /// Holds the id of a specific screen.
 pub type X11DisplayScreenNum = usize;
@@ -35,3 +35,6 @@ pub fn connect() -> X11Result<(X11Connection, X11DisplayScreenNum)> {
     Ok(x11rb::connect(None)?)
 }
 
+pub mod prelude {
+    pub use x11rb::connection::Connection as X11RawConnection;
+}
