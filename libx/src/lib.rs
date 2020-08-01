@@ -39,7 +39,9 @@ pub fn connect() -> X11Result<(X11Connection, self::screens::X11ScreenNum)> {
 pub mod prelude {
     /// This is the Connecton trait which should be in scope when accessing nodes of it.
     pub use x11rb::connection::Connection as X11RawConnection;
+    /// The ConnectionExt trait is providing utils to get detailed window information.
     pub use x11rb::protocol::xproto::ConnectionExt as X11ConnectionExt;
+
     pub use super::X11Connection;
     pub use super::screens::X11ScreenNum;
     pub use super::windows::X11WindowId;
@@ -48,11 +50,13 @@ pub mod prelude {
 /// Contains all screen management related components.
 pub mod screens {
     use super::prelude::*;
+    /// This struct represents a single screen and holds meta data about it.
     pub use x11rb::protocol::xproto::Screen as X11Screen;
 
     /// Holds the id of a specific screen.
     pub type X11ScreenNum = usize;
 
+    /// Turns a Connection into a vector of screens.
     pub fn get_all_screens(connection: &X11Connection) -> &Vec<X11Screen> {
         &connection.setup().roots
     }
@@ -71,11 +75,20 @@ pub mod windows {
 
     use x11rb::protocol::xproto::MapState;
 
+    /// A Window ID. Needs to be provided to most X API-Calls.
     pub use x11rb::protocol::xproto::Window as X11WindowId;
+
+    /// A struct which holds geometry data about a specific window.
     pub use x11rb::protocol::xproto::GetGeometryReply as X11GetGeometryReply;
+
+    /// A struct which holds all attributes of a specific window.
     pub use x11rb::protocol::xproto::GetWindowAttributesReply as X11GetWindowAttributesReply;
+
+    /// A utility to access the `WM_CLASS` prop of windows.
     pub use x11rb::properties::WmClass as X11WmClass;
 
+    /// A X11Window combines multiple data structures about the same window and
+    /// implements some utils for working with them.
     #[derive(Debug)]
     pub struct X11Window {
         pub id: X11WindowId,
@@ -85,6 +98,7 @@ pub mod windows {
     }
 
     impl X11Window {
+        /// Creates a new X11Window
         pub fn new(
             id: X11WindowId,
             attributes: X11GetWindowAttributesReply,
@@ -99,6 +113,8 @@ pub mod windows {
             }
         }
 
+        /// Returns the second item of the WM_CLASS prop of a window if it's present.
+        /// This is the "type" of a window. This is useful for targeting specific windows.
         pub fn get_wm_class(&self) -> Option<String> {
             match &self.wm_class {
                 Some(class) => match std::str::from_utf8(class.class()) {
@@ -109,6 +125,8 @@ pub mod windows {
             }
         }
 
+        /// Returns first item of the WM_CLASS prop of a window if it's present.
+        /// This is the instance name of a window. You probably wont need this.
         pub fn get_wm_class_instance(&self) -> Option<String> {
             match &self.wm_class {
                 Some(class) => match std::str::from_utf8(class.instance()) {
@@ -120,9 +138,12 @@ pub mod windows {
         }
     }
 
+    /// Fetches all windows which exist on a given screen and turns them into a X11Window.
     pub fn get_windows(connection: &X11Connection, screen: &X11Screen) -> X11Result<Vec<X11Window>> {
+        // Loads all children of the current screen.
         let tree_reply = connection.query_tree(screen.root)?.reply()?;
 
+        // Turns them into X-Cookies and fetches data about each window.
         let mut cookies = Vec::with_capacity(tree_reply.children.len());
         for win in tree_reply.children {
             let attr = connection.get_window_attributes(win)?;
@@ -131,6 +152,7 @@ pub mod windows {
             cookies.push((win, attr, geom, class));
         }
 
+        // Transforms "unmanaged" windows into a X11Window and returns them.
         let mut windows: Vec<X11Window> = Vec::with_capacity(cookies.len());
         for (win, attr, geom, class) in cookies {
             let (attr, geom, class) = (attr.reply(), geom.reply(), class.reply_unchecked());
