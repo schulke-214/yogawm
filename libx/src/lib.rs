@@ -74,6 +74,7 @@ pub mod windows {
     use super::X11Result;
 
     use x11rb::protocol::xproto::MapState;
+    use x11rb::protocol::xproto::QueryTreeReply;
 
     /// A Window ID. Needs to be provided to most X API-Calls.
     pub use x11rb::protocol::xproto::Window as X11WindowId;
@@ -138,14 +139,11 @@ pub mod windows {
         }
     }
 
-    /// Fetches all windows which exist on a given screen and turns them into a X11Window.
-    pub fn get_windows(connection: &X11Connection, screen: &X11Screen) -> X11Result<Vec<X11Window>> {
-        // Loads all children of the current screen.
-        let tree_reply = connection.query_tree(screen.root)?.reply()?;
-
+    /// 
+    fn query_tree_reply_to_windows(connection: &X11Connection, reply: QueryTreeReply, show_mapped_windows: bool) -> X11Result<Vec<X11Window>> {
         // Turns them into X-Cookies and fetches data about each window.
-        let mut cookies = Vec::with_capacity(tree_reply.children.len());
-        for win in tree_reply.children {
+        let mut cookies = Vec::with_capacity(reply.children.len());
+        for win in reply.children {
             let attr = connection.get_window_attributes(win)?;
             let geom = connection.get_geometry(win)?;
             let class = X11WmClass::get(connection, win)?;
@@ -157,18 +155,44 @@ pub mod windows {
         for (win, attr, geom, class) in cookies {
             let (attr, geom, class) = (attr.reply(), geom.reply(), class.reply_unchecked());
 
+            // Checking for any errors. We skip a window if we cant get all information about it.
             if attr.is_err() || geom.is_err() || class.is_err() {
-                continue; // Just skip this window
+                continue;
             }
 
+            // It's safe to unwrap now because we checked for errors already.
             let (attr, geom, class) = (attr.unwrap(), geom.unwrap(), class.unwrap());
+            let xwin = X11Window::new(win, attr, geom, class);
 
-            if !attr.override_redirect && attr.map_state != MapState::Unmapped {
-                windows.push(X11Window::new(win, attr, geom, class));
+            // If we should take all windows into account, we just use it now
+            // without any other checks.
+            if show_mapped_windows {
+                windows.push(xwin);
+            }
+            // else we check for unmanaged or "unmapped" windows and take only those
+            // into account which fullfill these requirements.
+            else if !xwin.attributes.override_redirect && xwin.attributes.map_state != MapState::Unmapped {
+                windows.push(xwin);
             }
         }
 
         Ok(windows)
+    }
+
+    /// Fetches all windows which exist on a given screen and turns them into a X11Window.
+    pub fn get_windows(connection: &X11Connection, screen: &X11Screen) -> X11Result<Vec<X11Window>> {
+        // Loads all children of the current screen.
+        let tree_reply = connection.query_tree(screen.root)?.reply()?;
+
+        query_tree_reply_to_windows(connection, tree_reply, false)
+    }
+
+    /// Retrive all children of a given window.
+    pub fn get_child_windows(connection: &X11Connection, window: X11WindowId) -> X11Result<Vec<X11Window>> {
+        // Loads all children of the given window.
+        let tree_reply = connection.query_tree(window)?.reply()?;
+
+        query_tree_reply_to_windows(connection, tree_reply, false)
     }
 }
 
