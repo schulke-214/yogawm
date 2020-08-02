@@ -137,6 +137,58 @@ pub mod windows {
                 None => None
             }
         }
+
+        /// Retrives all children of a given window.
+        pub fn get_subwindows(&self, connection: &X11Connection) -> X11Result<Vec<X11Window>> {
+            // Loads all children of the given window.
+            let tree_reply = connection.query_tree(self.id)?.reply()?;
+
+            query_tree_reply_to_windows(connection, tree_reply, false)
+        }
+
+        /// Destroys the current window if its not already destroyed.
+        pub fn destroy(&self, connection: &X11Connection) -> X11Result<()> {
+            println!("Destroy: {} {}", self.id, self.get_wm_class().unwrap());
+            connection.destroy_window(self.id)?;
+
+            Ok(())
+        }
+
+        /// Destroyes all subwindows if possible.
+        pub fn destroy_subwindows(&self, connection: &X11Connection) -> X11Result<()> {
+            connection.destroy_subwindows(self.id)?;
+
+            Ok(())
+        }
+
+        /// Unmaps ("hides") the current window if possible.
+        pub fn unmap(&self, connection: &X11Connection) -> X11Result<()> {
+            connection.unmap_window(self.id)?;
+
+            Ok(())
+        }
+
+        /// Maps ("shows") the current window if possible.
+        pub fn map(&self, connection: &X11Connection) -> X11Result<()> {
+            connection.map_window(self.id)?;
+
+            Ok(())
+        }
+
+        /// Maps ("shows") the subwindow of the current window if possible.
+        pub fn map_subwindows(&self, connection: &X11Connection) -> X11Result<()> {
+            connection.map_subwindows(self.id)?;
+
+            Ok(())
+        }
+
+        /// Unmaps ("hides") the subwindow of the current window if possible.
+        pub fn unmap_subwindows(&self, connection: &X11Connection) -> X11Result<()> {
+            connection.unmap_subwindows(self.id)?;
+
+            Ok(())
+        }
+
     }
 
     /// Turns a QueryTree into a vector of X11Windows.
@@ -180,17 +232,17 @@ pub mod windows {
     }
 
     /// Fetches all windows which exist on a given screen and turns them into a X11Window.
-    pub fn get_windows(connection: &X11Connection, screen: &X11Screen) -> X11Result<Vec<X11Window>> {
+    pub fn get_all_windows(connection: &X11Connection, screen: &X11Screen) -> X11Result<Vec<X11Window>> {
         // Loads all children of the current screen.
         let tree_reply = connection.query_tree(screen.root)?.reply()?;
 
-        query_tree_reply_to_windows(connection, tree_reply, false)
+        query_tree_reply_to_windows(connection, tree_reply, true)
     }
 
-    /// Retrive all children of a given window.
-    pub fn get_child_windows(connection: &X11Connection, window: X11WindowId) -> X11Result<Vec<X11Window>> {
-        // Loads all children of the given window.
-        let tree_reply = connection.query_tree(window)?.reply()?;
+    /// Fetches windows which are currently unmappped on a given screen and turns them into a X11Window.
+    pub fn get_unmapped_windows(connection: &X11Connection, screen: &X11Screen) -> X11Result<Vec<X11Window>> {
+        // Loads all children of the current screen.
+        let tree_reply = connection.query_tree(screen.root)?.reply()?;
 
         query_tree_reply_to_windows(connection, tree_reply, false)
     }
