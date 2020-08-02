@@ -1,4 +1,4 @@
-# yogawm - the flexible window manager library
+# yogawm - the flexible window manager (library)
 
 Yoga is a felxible library for creating x window managers. You can think of it a little bit like XMonad -
 altough it's a little less coupled. The goal is to take as much complexity as possible away while offering
