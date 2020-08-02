@@ -139,7 +139,7 @@ pub mod windows {
         }
     }
 
-    /// 
+    /// Turns a QueryTree into a vector of X11Windows.
     fn query_tree_reply_to_windows(connection: &X11Connection, reply: QueryTreeReply, show_mapped_windows: bool) -> X11Result<Vec<X11Window>> {
         // Turns them into X-Cookies and fetches data about each window.
         let mut cookies = Vec::with_capacity(reply.children.len());
