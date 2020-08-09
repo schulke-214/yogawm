@@ -13,14 +13,14 @@ pull in only the features you need. You handle events by yourself. And you can m
 ## Quickstart
 
 Not possible right now. This lib is pre-alpha. Currently the primary development goal is to fully implement and
-test `libx` to have a good starting point for designing the internals of `yoga`.
+test `libx11` to have a good starting point for designing the internals of `yoga`.
 
 ## Development Roadmap
 
 This is a very very rough overview of the next steps for this library. Things might change, get removed or new stuff
 gets added along the way.
 
-### libx
+### libx11
 
 - [x] Establish a connection to X11
 - [x] Retrieve data about screens
@@ -32,7 +32,7 @@ gets added along the way.
 
 ### yoga
 
-- [ ] Provide abstractions over `libx`
+- [ ] Provide abstractions over `libx11`
 - [ ] Focus on window manager tasks (event handling, workspaces, layouts)
 - [ ] Provide traits to implement own Layouts
 - [ ] Handle internal event loop and interaction with libx (only pass events to client)

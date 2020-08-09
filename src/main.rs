@@ -1,7 +1,7 @@
-use libx::prelude::*;
-use libx::connect;
-use libx::screens::get_screen;
-use libx::windows::get_all_windows;
+use libx11::prelude::*;
+use libx11::connect;
+use libx11::screens::get_screen;
+use libx11::windows::get_all_windows;
 
 mod error;
 
@@ -21,22 +21,39 @@ fn main() -> Result<(), YogaError> {
 
     println!("screen = {} x {}", screen.width_in_pixels, screen.height_in_pixels);
 
+    let mut xterm_is_hidden = false;
+    let mut counter = 0;
+
     loop {
         let windows = get_all_windows(&connection, &screen);
+        println!("{:#?}", windows);
 
         for win in windows.unwrap().iter() {
-            println!("window 0 {:#?}", win.get_wm_class());
 
             if win.get_wm_class().unwrap() == "XTerm" {
-                println!("FOUND xterm :)");
-                println!("KILL xterm !");
+                println!("xterm {:#?}", win.get_wm_class());
 
-                win.destroy(&connection)?;
+                if !xterm_is_hidden {
+                    println!("hide");
+                    win.unmap(&connection)?;
+                    xterm_is_hidden = true;
+                } else {
+                    println!("show");
+                    win.map(&connection)?;
+                    xterm_is_hidden = false;
+                }
+
+                if counter >= 5 {
+                    win.destroy(&connection)?;
+                }
+
+                counter += 1;
                 connection.flush().unwrap();
             }
+
         }
 
-        std::thread::sleep(std::time::Duration::from_millis(100));
+        std::thread::sleep(std::time::Duration::from_millis(300));
     }
 }
 

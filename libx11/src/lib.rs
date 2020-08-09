@@ -6,7 +6,7 @@
 //! If you're new in working with x11 you should probably take a look at
 //! ![https://tronche.com/gui/x/xlib/display/opening.html](this)
 //!
-//! `libx` can be broken up into 4 important parts:
+//! `libx11` can be broken up into 4 important parts:
 //! - Connection / Screen Management
 //! - Window Management
 //! - Input / Event Handling
