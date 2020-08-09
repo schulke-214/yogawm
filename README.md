@@ -7,8 +7,9 @@ a really easy to understand documentation which makes things alot more clear to 
 
 In the end you will have your own project/crate/code which just uses the interfaces and ideas `yoga` offers you.
 
-While XMonad has a (atleast) some kind of imperative API, `yoga` tries to be as declarative as possible. You
-pull in only the features you need. You handle events by yourself. And you can make it everything you want.
+While XMonad has a (atleast) some kind of imperative API, `yoga` tries to be as declarative as possible.
+
+You pull in only the features you need. You handle events by yourself. You make it everything you want.
 
 ## Quickstart
 
