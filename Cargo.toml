@@ -12,4 +12,4 @@ edition = "2018"
 license = "MIT"
 
 [dependencies]
-libx11 = { path = "libx11" }
+libx11 = { path = "libx11", version = "0.1.0" }
