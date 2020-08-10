@@ -2,14 +2,16 @@
 
 Yoga is a felxible library for creating x window managers. You can think of it a little bit like XMonad -
 altough it's a little less coupled to specific ideas. The goal is to take as much complexity as possible
-away while offering a full-featured api for programming your "own" wm. Another important goal is to have
+away while offering a full-featured framework for programming your "own" wm. Another important goal is to have
 a really easy to understand documentation which makes things alot more clear to users.
 
-In the end you will have your own project/crate/code which just uses the interfaces and ideas `yoga` offers you.
+Yoga has *no configuration file*, like most other wm's. You write a standalone program which just uses the
+interfaces and ideas `yoga` offers you. `yoga` tries to be as declarative as possible. This way might be a
+little harder to get started with, but it has also some great benefits:
 
-While XMonad has a (atleast) some kind of imperative API, `yoga` tries to be as declarative as possible.
-
-You pull in only the features you need. You handle events by yourself. You make it everything you want.
+- You pull in only the features you need.
+- You handle window events by yourself.
+- You build what you want.
 
 ## Quickstart
 
