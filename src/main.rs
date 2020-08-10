@@ -3,10 +3,10 @@
 mod error;
 mod x11;
 
-use x11::prelude::*;
-use x11::connect;
-use x11::screens::get_screen;
-use x11::windows::get_all_windows;
+use self::x11::prelude::*;
+use self::x11::connect;
+use self::x11::screens::get_screen;
+use self::x11::windows::get_all_windows;
 
 use error::YogaError;
 
