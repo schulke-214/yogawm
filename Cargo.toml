@@ -1,9 +1,15 @@
 [package]
 name = "yogawm"
-description = "The API based X11 window manager"
+description = "The flexible library for creating x window managers"
+homepage = "https://github.com/schulke-214/yogawm"
+repository = "https://github.com/schulke-214/yogawm.git"
+readme = "README.md"
+keywords = ["yoga", "window manager", "x11", "linux", "yogawm", "wm", "libx11"]
+categories = ["api-bindings", "os::unix-apis", "rendering::engine"]
 version = "0.1.0"
 authors = ["schulke-214 <hello@maximilianschulke.com>"]
 edition = "2018"
+license = "MIT"
 
 [dependencies]
 libx11 = { path = "libx11" }
