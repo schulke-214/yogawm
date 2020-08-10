@@ -10,3 +10,6 @@ version = "0.1.0"
 authors = ["schulke-214 <hello@maximilianschulke.com>"]
 edition = "2018"
 license = "MIT"
+
+[dependencies]
+x11rb = "0.6.0"
