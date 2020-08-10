@@ -1,3 +1,5 @@
+#![feature(type_alias_impl_trait)]
+
 mod error;
 mod x11;
 

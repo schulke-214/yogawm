@@ -14,8 +14,6 @@
 //!
 //! Each of these parts has it's own module whith further documentation.
 
-#![feature(type_alias_impl_trait)]
-
 pub mod error;
 pub use error::X11Error;
 
