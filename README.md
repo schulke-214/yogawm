@@ -16,14 +16,12 @@ little harder to get started with, but it has also some great benefits:
 ## Quickstart
 
 Not possible right now. This lib is pre-alpha. Currently the primary development goal is to fully implement and
-test `libx11` to have a good starting point for designing the internals of `yoga`.
+test the `x11` module to have a good starting point for designing the internals of `yoga`.
 
 ## Development Roadmap
 
 This is a very very rough overview of the next steps for this library. Things might change, get removed or new stuff
 gets added along the way.
-
-### libx11
 
 - [x] Establish a connection to X11
 - [x] Retrieve data about screens
@@ -32,10 +30,6 @@ gets added along the way.
 - [ ] Provide a solid event system
 - [ ] Provide io interfaces (keyboard/mice)
 - [ ] Provide highlevel drawing interfaces
-
-### yoga
-
-- [ ] Provide abstractions over `libx11`
 - [ ] Focus on window manager tasks (event handling, workspaces, layouts)
 - [ ] Provide traits to implement own Layouts
 - [ ] Handle internal event loop and interaction with libx (only pass events to client)
