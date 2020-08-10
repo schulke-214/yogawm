@@ -1,4 +1,4 @@
-use libx::X11Error;
+use libx11::X11Error;
 
 #[derive(Debug)]
 pub enum YogaError {

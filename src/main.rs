@@ -7,13 +7,16 @@ mod error;
 
 use error::YogaError;
 
+fn main() -> Result<(), YogaError> {
+    unimplemented!();
+}
+
 /*
 struct WindowManagerState {}
 struct Window {}
 struct Event {}
 trait WindowManager {}
 trait Layout {}
-*/
 
 fn main() -> Result<(), YogaError> {
     let (connection, screen_num) = connect()?;
@@ -57,3 +60,4 @@ fn main() -> Result<(), YogaError> {
     }
 }
 
+*/
