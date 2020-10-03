@@ -5,16 +5,11 @@ mod x11;
 
 use x11::prelude::*;
 use x11::connect;
-use x11::screens::get_screen;
+use x11::screens::{get_screen, manage_screen};
 use x11::windows::get_all_windows;
 
 use error::YogaError;
 
-/*
-fn main() -> Result<(), YogaError> {
-	unimplemented!();
-}
-*/
 
 struct WindowManagerState {}
 struct Window {}
@@ -22,45 +17,35 @@ struct Event {}
 trait WindowManager {}
 trait Layout {}
 
+
 fn main() -> Result<(), YogaError> {
 	let (connection, screen_num) = connect()?;
 	let screen = get_screen(&connection, screen_num);
 
-	println!("screen = {} x {}", screen.width_in_pixels, screen.height_in_pixels);
+	manage_screen(&connection, &screen)?;
 
-	let mut xterm_is_hidden = false;
-	let mut counter = 0;
+	// let mut wm_state = WMState::new().unwrap();
+	// wm_state.scan_windows().unwrap();
 
 	loop {
-		let windows = get_all_windows(&connection, &screen);
-		println!("{:#?}", windows);
+		// wm_state.refresh().unwrap();
+		println!("[yoga] flush connection");
 
-		for win in windows.unwrap().iter() {
+		connection.flush().unwrap();
 
-			if win.get_wm_class().unwrap() == "XTerm" {
-				println!("xterm {:#?}", win.get_wm_class());
+		println!("[yoga] wait for event");
 
-				if !xterm_is_hidden {
-					println!("hide");
-					win.unmap(&connection)?;
-					xterm_is_hidden = true;
-				} else {
-					println!("show");
-					win.map(&connection)?;
-					xterm_is_hidden = false;
-				}
+		let event = connection.wait_for_event().unwrap();
 
-				if counter >= 5 {
-					win.destroy(&connection)?;
-				}
+		println!("[yoga] found event {:#?}", event);
 
-				counter += 1;
-				connection.flush().unwrap();
-			}
+		let mut event_option = Some(event);
 
+		while let Some(event) = event_option {
+
+			// wm_state.handle_event(event).unwrap();
+			event_option = connection.poll_for_event().unwrap();
 		}
-
-		std::thread::sleep(std::time::Duration::from_millis(300));
 	}
 }
 
