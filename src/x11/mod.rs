@@ -48,6 +48,14 @@ pub mod prelude {
 /// Contains all screen management related components.
 pub mod screens {
 	use super::prelude::*;
+	use super::X11Result;
+	use super::X11Error;
+
+	use x11rb::errors::ReplyError;
+	use x11rb::protocol::Error;
+	use x11rb::protocol::xproto::ChangeWindowAttributesAux;
+	use x11rb::protocol::xproto::EventMask;
+
 	/// This struct represents a single screen and holds meta data about it.
 	pub use x11rb::protocol::xproto::Screen as X11Screen;
 
@@ -63,6 +71,25 @@ pub mod screens {
 	pub fn get_screen(connection: &X11Connection, screen_num: X11ScreenNum) -> &X11Screen {
 		&get_all_screens(connection)[screen_num]
 	}
+
+	/// Try to become the window manager of the given screen.
+	pub fn manage_screen(connection: &X11Connection, screen: &X11Screen) -> X11Result<()> {
+		// Try to become the window manager. This causes an error if there is already another WM.
+		let change = ChangeWindowAttributesAux::default()
+			.event_mask(EventMask::SubstructureRedirect | EventMask::SubstructureNotify);
+
+		let res = connection.change_window_attributes(screen.root, &change)?.check();
+
+		if let Err(e) = res {
+			if let ReplyError::X11Error(Error::Access(_)) = e {
+				println!("[x11] unable to manage screen - there is probably another window manager running.");
+				return Err(e.into());
+			}
+		}
+
+		Ok(())
+	}
+	
 }
 
 /// Contains all window management related components.
@@ -71,6 +98,7 @@ pub mod windows {
 	use super::screens::X11Screen;
 	use super::X11Result;
 
+	use x11rb::protocol::xproto::SetMode;
 	use x11rb::protocol::xproto::MapState;
 	use x11rb::protocol::xproto::QueryTreeReply;
 
@@ -147,6 +175,7 @@ pub mod windows {
 		/// Destroys the current window if its not already destroyed.
 		pub fn destroy(&self, connection: &X11Connection) -> X11Result<()> {
 			println!("Destroy: {} {}", self.id, self.get_wm_class().unwrap());
+			connection.change_save_set(SetMode::Delete, self.id)?;
 			connection.destroy_window(self.id)?;
 
 			Ok(())
