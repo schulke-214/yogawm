@@ -72,6 +72,19 @@ pub mod screens {
 		&get_all_screens(connection)[screen_num]
 	}
 
+	/// Try to become the window manager of all available screens.
+	pub fn manage_all_screens(connection: &X11Connection) -> X11Result<()> {
+		unimplemented!();
+
+		// let screens = get_all_screens(&connection);
+
+		// screens
+		// 	.iter()
+		// 	.map(|screen| manage_screen(&connection, &screen));
+
+		// Ok(())
+	}
+
 	/// Try to become the window manager of the given screen.
 	pub fn manage_screen(connection: &X11Connection, screen: &X11Screen) -> X11Result<()> {
 		// Try to become the window manager. This causes an error if there is already another WM.
