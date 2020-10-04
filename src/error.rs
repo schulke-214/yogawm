@@ -11,3 +11,4 @@ impl From<X11Error> for YogaError {
 	}
 }
 
+pub type YogaResult<T> = Result<T, YogaError>;
