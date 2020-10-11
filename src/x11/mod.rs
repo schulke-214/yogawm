@@ -14,6 +14,8 @@
 //!
 //! Each of these parts has it's own module whith further documentation.
 
+#![allow(dead_code)]
+
 pub mod error;
 pub use error::X11Error;
 
