@@ -6,6 +6,16 @@ use x11rb::errors::{
 	ReplyOrIdError
 };
 
+pub mod internal {
+	pub use x11rb::errors::{
+		ConnectError,
+		ConnectionError,
+		ParseError,
+		ReplyError,
+		ReplyOrIdError
+	};
+}
+
 #[derive(Debug)]
 pub enum X11Error {
 	ConnectError(ConnectError),

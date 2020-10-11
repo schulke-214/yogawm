@@ -18,12 +18,12 @@ impl WindowManagerState {
 		})
 	}
 
-	pub fn scan() -> YogaResult<()> {
+	pub fn scan(&self) -> YogaResult<()> {
 		println!("scan windows on all screens");
 		Ok(())
 	}
 
-	pub fn refresh() -> YogaResult<()> {
+	pub fn refresh(&self) -> YogaResult<()> {
 		println!("refresh wm");
 		Ok(())
 	}

@@ -1,4 +1,12 @@
+use crate::transitive_from;
 use crate::x11::X11Error;
+use crate::x11::error::internal::{
+	ConnectError,
+	ConnectionError,
+	ParseError,
+	ReplyError,
+	ReplyOrIdError
+};
 
 #[derive(Debug)]
 pub enum YogaError {
@@ -8,6 +16,18 @@ pub enum YogaError {
 impl From<X11Error> for YogaError {
 	fn from(error: X11Error) -> Self {
 		YogaError::X11Error(error)
+	}
+}
+
+transitive_from! {
+	YogaError {
+		X11Error {
+			ConnectError,
+			ConnectionError,
+			ParseError,
+			ReplyError,
+			ReplyOrIdError
+		}
 	}
 }
 

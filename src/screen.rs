@@ -7,7 +7,7 @@ pub struct Screen {
 }
 
 impl Screen {
-	pub fn refresh() -> YogaResult<()> {
+	pub fn refresh(&self) -> YogaResult<()> {
 		println!("refresh screen");
 		Ok(())
 	}

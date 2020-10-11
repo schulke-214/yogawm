@@ -1,5 +1,6 @@
 #![feature(type_alias_impl_trait)]
 
+mod macros;
 mod error;
 mod event;
 mod layout;
@@ -22,7 +23,7 @@ fn main() -> YogaResult<()> {
 
 	manage_screen(&connection, &screen)?;
 
-	let mut wm_state = WindowManagerState::new(&connection);
+	let mut wm_state = WindowManagerState::new(&connection)?;
 
 	wm_state.scan()?;
 
@@ -42,7 +43,7 @@ fn main() -> YogaResult<()> {
 
 		while let Some(event) = event_option {
 			// wm_state.handle_event(event).unwrap();
-			// event_option = match connection.poll_for_event()?;
+			event_option = connection.poll_for_event()?;
 		}
 	}
 }
