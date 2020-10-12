@@ -1,6 +1,5 @@
 #![feature(type_alias_impl_trait)]
 
-mod macros;
 mod error;
 mod event;
 mod layout;

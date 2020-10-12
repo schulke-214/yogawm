@@ -1,6 +1,5 @@
 #![feature(type_alias_impl_trait)]
 
-mod macros;
 pub mod error;
 pub mod event;
 pub mod layout;

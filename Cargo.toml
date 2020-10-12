@@ -13,3 +13,4 @@ license = "MIT"
 
 [dependencies]
 x11rb = "0.6.0"
+transitive_from = "0.1.0"
