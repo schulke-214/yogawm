@@ -1,3 +1,5 @@
+use log::{debug};
+
 use crate::error::YogaResult;
 
 pub struct Window {
@@ -6,7 +8,7 @@ pub struct Window {
 
 impl Window {
 	pub fn refresh() -> YogaResult<()> {
-		println!("refresh window");
+		debug!("refresh window");
 		Ok(())
 	}
 }

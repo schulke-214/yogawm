@@ -1,3 +1,5 @@
+use log::{debug};
+
 use crate::x11::prelude::*;
 use crate::error::{YogaError, YogaResult};
 
@@ -19,12 +21,12 @@ impl WindowManagerState {
 	}
 
 	pub fn scan(&self) -> YogaResult<()> {
-		println!("scan windows on all screens");
+		debug!("scan windows on all screens");
 		Ok(())
 	}
 
 	pub fn refresh(&self) -> YogaResult<()> {
-		println!("refresh wm");
+		debug!("refresh wm");
 		Ok(())
 	}
 }

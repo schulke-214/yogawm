@@ -49,6 +49,8 @@ pub mod prelude {
 
 /// Contains all screen management related components.
 pub mod screens {
+	use log::{error};
+
 	use super::prelude::*;
 	use super::X11Result;
 	use super::X11Error;
@@ -97,7 +99,7 @@ pub mod screens {
 
 		if let Err(e) = res {
 			if let ReplyError::X11Error(Error::Access(_)) = e {
-				println!("[x11] unable to manage screen - there is probably another window manager running.");
+				error!("[x11] unable to manage screen - there is probably another window manager running.");
 				return Err(e.into());
 			}
 		}
@@ -109,6 +111,8 @@ pub mod screens {
 
 /// Contains all window management related components.
 pub mod windows {
+	use log::{debug};
+
 	use super::prelude::*;
 	use super::screens::X11Screen;
 	use super::X11Result;
@@ -189,7 +193,7 @@ pub mod windows {
 
 		/// Destroys the current window if its not already destroyed.
 		pub fn destroy(&self, connection: &X11Connection) -> X11Result<()> {
-			println!("Destroy: {} {}", self.id, self.get_wm_class().unwrap());
+			debug!("Destroy: {} {}", self.id, self.get_wm_class().unwrap());
 			connection.change_save_set(SetMode::Delete, self.id)?;
 			connection.destroy_window(self.id)?;
 

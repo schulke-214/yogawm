@@ -1,5 +1,8 @@
 #![feature(type_alias_impl_trait)]
 
+use log::{debug};
+use env_logger;
+
 mod macros;
 mod error;
 mod event;
@@ -18,6 +21,8 @@ use state::WindowManagerState;
 use error::{YogaError, YogaResult};
 
 fn main() -> YogaResult<()> {
+	env_logger::init();
+
 	let (connection, screen_num) = connect()?;
 	let screen = get_screen(&connection, screen_num);
 
@@ -29,15 +34,15 @@ fn main() -> YogaResult<()> {
 
 	loop {
 		wm_state.refresh()?;
-		println!("[yoga] flush connection");
+		debug!("flush connection");
 
 		connection.flush()?;
 
-		println!("[yoga] wait for event");
+		debug!("wait for event");
 
 		let event = connection.wait_for_event()?;
 
-		println!("[yoga] found event {:#?}", event);
+		debug!("found event {:#?}", event);
 
 		let mut event_option = Some(event);
 
