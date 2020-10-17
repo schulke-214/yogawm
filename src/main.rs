@@ -14,10 +14,9 @@ mod x11;
 use x11::prelude::*;
 use x11::connect;
 use x11::screens::{get_screen, manage_screen};
-use x11::windows::{get_all_windows, X11Window};
 
 use state::WindowManagerState;
-use error::{YogaError, YogaResult};
+use error::{YogaResult};
 
 fn main() -> YogaResult<()> {
 	env_logger::init();
@@ -40,12 +39,11 @@ fn main() -> YogaResult<()> {
 		debug!("wait for event");
 
 		let event = connection.wait_for_event()?;
-
-		debug!("found event {:#?}", event);
-
 		let mut event_option = Some(event);
 
 		while let Some(event) = event_option {
+			debug!("found event {:#?}", event);
+			
 			// wm_state.handle_event(event).unwrap();
 			event_option = connection.poll_for_event()?;
 		}

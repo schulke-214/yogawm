@@ -1,1 +1,3 @@
+#![allow(unused)]
+
 struct Event {}

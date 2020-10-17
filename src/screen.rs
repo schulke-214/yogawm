@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use log::{debug};
 
 use crate::error::YogaResult;

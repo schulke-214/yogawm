@@ -53,7 +53,6 @@ pub mod screens {
 
 	use super::prelude::*;
 	use super::X11Result;
-	use super::X11Error;
 
 	use x11rb::errors::ReplyError;
 	use x11rb::protocol::Error;
@@ -77,7 +76,7 @@ pub mod screens {
 	}
 
 	/// Try to become the window manager of all available screens.
-	pub fn manage_all_screens(connection: &X11Connection) -> X11Result<()> {
+	pub fn manage_all_screens(_connection: &X11Connection) -> X11Result<()> {
 		unimplemented!();
 
 		// let screens = get_all_screens(&connection);
