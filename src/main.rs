@@ -3,7 +3,6 @@
 use log::{debug};
 use env_logger;
 
-mod macros;
 mod error;
 mod event;
 mod layout;

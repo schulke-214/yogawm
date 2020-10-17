@@ -1,4 +1,5 @@
-use crate::transitive_from;
+use transitive_from::hierarchy;
+
 use crate::x11::X11Error;
 use crate::x11::error::internal::{
 	ConnectError,
@@ -19,7 +20,7 @@ impl From<X11Error> for YogaError {
 	}
 }
 
-transitive_from! {
+hierarchy! {
 	YogaError {
 		X11Error {
 			ConnectError,
