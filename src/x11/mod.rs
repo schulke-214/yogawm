@@ -99,7 +99,7 @@ pub mod screens {
 
 		if let Err(e) = res {
 			if let ReplyError::X11Error(Error::Access(_)) = e {
-				error!("[x11] unable to manage screen - there is probably another window manager running.");
+				error!("unable to manage screen - there is probably another window manager running.");
 				return Err(e.into());
 			}
 		}
@@ -193,7 +193,7 @@ pub mod windows {
 
 		/// Destroys the current window if its not already destroyed.
 		pub fn destroy(&self, connection: &X11Connection) -> X11Result<()> {
-			debug!("Destroy: {} {}", self.id, self.get_wm_class().unwrap());
+			debug!("destroy: {} {}", self.id, self.get_wm_class().unwrap());
 			connection.change_save_set(SetMode::Delete, self.id)?;
 			connection.destroy_window(self.id)?;
 
