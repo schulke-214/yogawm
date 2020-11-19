@@ -1,5 +1,4 @@
-# yoga
-
+# yoga - the efficient and flexible tiling window manager
 
 <!--
 - the flexible window manager (library)
