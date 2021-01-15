@@ -1,6 +1,6 @@
 #![feature(type_alias_impl_trait)]
 
-use log::{debug};
+use log::{debug, info};
 use env_logger;
 
 mod error;
@@ -23,6 +23,8 @@ fn main() -> YogaResult<()> {
 
 	let (connection, screen_num) = connect()?;
 	let screen = get_screen(&connection, screen_num);
+
+	info!("connected succesfully to screen {}", screen_num);
 
 	manage_screen(&connection, &screen)?;
 

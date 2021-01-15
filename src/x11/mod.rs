@@ -42,6 +42,8 @@ pub mod prelude {
 	/// The ConnectionExt trait is providing utils to get detailed window information.
 	pub use x11rb::protocol::xproto::ConnectionExt as X11ConnectionExt;
 
+	pub use x11rb::protocol::Event as X11Event;
+
 	pub use super::X11Connection;
 	pub use super::screens::X11ScreenNum;
 	pub use super::windows::X11WindowId;
@@ -49,13 +51,13 @@ pub mod prelude {
 
 /// Contains all screen management related components.
 pub mod screens {
-	use log::{error};
+	use log::{error, info};
 
 	use super::prelude::*;
 	use super::X11Result;
 
 	use x11rb::errors::ReplyError;
-	use x11rb::protocol::Error;
+	use x11rb::protocol::ErrorKind;
 	use x11rb::protocol::xproto::ChangeWindowAttributesAux;
 	use x11rb::protocol::xproto::EventMask;
 
@@ -97,12 +99,18 @@ pub mod screens {
 		let res = connection.change_window_attributes(screen.root, &change)?.check();
 
 		if let Err(e) = res {
-			if let ReplyError::X11Error(Error::Access(_)) = e {
-				error!("unable to manage screen - there is probably another window manager running.");
-				return Err(e.into());
+			if let ReplyError::X11Error(err) = e {
+				match err.error_kind {
+					ErrorKind::Access => {
+						error!("unable to manage screen - there is probably another window manager running.");
+						return Err(e.into());
+					}
+					_ => {}
+				}
 			}
 		}
 
+		info!("became window manager");
 		Ok(())
 	}
 	
